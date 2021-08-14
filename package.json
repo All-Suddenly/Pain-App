@@ -1,0 +1,19 @@
+{
+  "name": "pain-app",
+  "version": "0.0.1",
+  "description": "An application the will help users track their different pain types over time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/All-Suddenly/Pain-App.git"
+  },
+  "author": "David Clausen, Mark Kostroun, Gary Norris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/All-Suddenly/Pain-App/issues"
+  },
+  "homepage": "https://github.com/All-Suddenly/Pain-App#readme"
+}
