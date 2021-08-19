@@ -1,9 +1,9 @@
 import 'dotenv/config';
 
 import express, { response } from 'express';
-import { Document, MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-const { MONGO_DB_NAME = '', MONGO_URL = ""  } = process.env;
+const { MONGO_DB_NAME = '', MONGO_URL = "", PORT = 4000 } = process.env;
 
 const databaseUrl = MONGO_URL;
 const client = new MongoClient(databaseUrl);
@@ -37,32 +37,22 @@ async function startServer() {
     return response.json(newUser);
   });
 
+  if (process.env.NODE_ENV === 'production') {
+    // Serve static assets
+    app.use(express.static('client/build'))
+  
+    // Serve index.html for non routed paths
+    const path = require('path')
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
+  } else {
+    app.get('*', (req, res) => {
+      res.send("In development mode.")
+    })
+  }
 
-  app.get('*', async (req, res) => {
-    const { id = '' } = req.query;
-
-    let user: Document | undefined;
-
-    if (id) {
-      user = await collection.findOne({ _id: new ObjectId(String(id)) });
-    }
-
-    return res.type('html').status(200).end(`<!DOCTYPE html>
-
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <div><h1>Hello ${user?.name || "World"}!</h1></div>
-    </body>
-    </html>`)
-  });
-
-  app.listen(3000, () => {
+  app.listen(PORT, () => {
     console.log("The server is listenting");
   });
 }

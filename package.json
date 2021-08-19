@@ -12,6 +12,7 @@
     "dev:client": "cross-env FORCE_COLOR=true npm run --prefix client start | cat -",
     "dev:server": "nodemon index.js",
     "dev": "run-p --print-label dev:server dev:client",
+    "heroku-postbuild": "npm run build && npm install --prefix client && npm run --prefix client build",
     "postinstall": "npm install --prefix client ./client",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
