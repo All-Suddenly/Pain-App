@@ -16,7 +16,7 @@
     "typescript": "^4.1.2"
   },
   "scripts": {
-    "start": "FORCE_COLOR=true react-scripts start | cat -",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
