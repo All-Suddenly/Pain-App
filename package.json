@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist client/build",
-    "dev:client": "cross-env FORCE_COLOR=true npm run --prefix client start | cat -",
+    "dev:client": "npm run --prefix client start",
     "dev:server": "nodemon index.js",
     "dev": "run-p --print-label dev:server dev:client",
     "heroku-postbuild": "npm run build && npm install --prefix client && npm run --prefix client build",
@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/All-Suddenly/Pain-App#readme",
   "dependencies": {
-    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongodb": "^4.1.0",
