@@ -1,10 +1,14 @@
+import 'dotenv/config';
+
 import express, { response } from 'express';
 import { Document, MongoClient, ObjectId } from 'mongodb';
 
-const databaseUrl = 'mongodb+srv://<username>:<password>@application.teqdc.mongodb.net?authSource=admin&replicaSet=atlas-4f4azn-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true';
+const { MONGO_DB_NAME = '', MONGO_URL = ""  } = process.env;
+
+const databaseUrl = MONGO_URL;
 const client = new MongoClient(databaseUrl);
 
-const databaseName = 'application';
+const databaseName = MONGO_DB_NAME;
 const app = express();
 
 
@@ -56,7 +60,7 @@ async function startServer() {
         <div><h1>Hello ${user?.name || "World"}!</h1></div>
     </body>
     </html>`)
-  })
+  });
 
   app.listen(3000, () => {
     console.log("The server is listenting");
