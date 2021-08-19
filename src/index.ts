@@ -6,17 +6,16 @@ import { MongoClient } from 'mongodb';
 const { MONGO_DB_NAME = '', MONGO_URL = "", PORT = 4000 } = process.env;
 
 const databaseUrl = MONGO_URL;
-const client = new MongoClient(databaseUrl);
+const dbClient = new MongoClient(databaseUrl);
 
 const databaseName = MONGO_DB_NAME;
 const app = express();
 
-
 async function startServer() {
-  await client.connect()
+  await dbClient.connect();
   console.log('Connected successfully to the mongo database');
 
-  const db = client.db(databaseName);
+  const db = dbClient.db(databaseName);
   const collection = db.collection('users');
 
   app.get('/api/users', async (req, res) => {
@@ -39,23 +38,22 @@ async function startServer() {
 
   if (process.env.NODE_ENV === 'production') {
     // Serve static assets
-    app.use(express.static('client/build'))
+    app.use(express.static('client/build'));
   
     // Serve index.html for non routed paths
-    const path = require('path')
+    const path = require('path');
     app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     })
   } else {
     app.get('*', (req, res) => {
-      res.send("In development mode.")
+      res.send("In development mode.");
     })
   }
 
   app.listen(PORT, () => {
-    console.log("The server is listenting");
+    console.log(`The server is listenting on: http://localhost:${PORT}`);
   });
 }
-
 
 startServer().then().catch(error => console.log(error));
