@@ -2,8 +2,9 @@ import 'dotenv/config';
 
 import express, { response } from 'express';
 import { MongoClient } from 'mongodb';
+import path from 'path';
 
-const { MONGO_DB_NAME = '', MONGO_URL = "", PORT = 4000 } = process.env;
+const { MONGO_DB_NAME = '', MONGO_URL = '', PORT = 4000 } = process.env;
 
 const databaseUrl = MONGO_URL;
 const dbClient = new MongoClient(databaseUrl);
@@ -24,7 +25,7 @@ async function startServer() {
     return res.json(users);
   });
 
-  app.post('/api/users', async (req, res) => {
+  app.post('/api/users', async (req) => {
     const { name, email, password } = req.query;
 
     const newUser = await collection.insertOne({
@@ -39,16 +40,15 @@ async function startServer() {
   if (process.env.NODE_ENV === 'production') {
     // Serve static assets
     app.use(express.static('client/build'));
-  
+
     // Serve index.html for non routed paths
-    const path = require('path');
     app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    })
+    });
   } else {
     app.get('*', (req, res) => {
-      res.send("In development mode.");
-    })
+      res.send('In development mode.');
+    });
   }
 
   app.listen(PORT, () => {
@@ -56,4 +56,6 @@ async function startServer() {
   });
 }
 
-startServer().then().catch(error => console.log(error));
+startServer()
+  .then()
+  .catch((error) => console.log(error));

@@ -1,0 +1,26 @@
+{
+  "root": false,
+  "env": {
+    "browser": true,
+    "amd": false,
+    "node": false
+  },
+  
+  // PARSER
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./client/tsconfig.json",
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+
+  // OVERRIDES
+  "overrides": [],
+
+  // RULES
+  "rules": {
+  }
+}
