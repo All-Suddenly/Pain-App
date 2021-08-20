@@ -7,12 +7,13 @@
     "node": "^16.4.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm-s build:server build:client",
+    "build:server": "tsc",
+    "build:client": "npm run --prefix client build",
     "clean": "rimraf dist client/build",
     "dev:client": "npm run --prefix client start",
     "dev:server": "nodemon",
     "dev": "run-p --print-label dev:server dev:client",
-    "heroku-postbuild": "npm run build && npm run --prefix client build",
     "postinstall": "npm install --prefix client ./client",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
