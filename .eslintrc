@@ -1,0 +1,64 @@
+{
+  "root": true,
+  "env": {
+    "browser": false,
+    "amd": true,
+    "node": true
+  },
+
+  // PARSER
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+
+  // PLUGINS
+  "plugins": [
+    "@typescript-eslint",
+    "react"
+  ],
+
+  // EXTENDS
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    // Prettier extends last
+    // to override conflicting rules
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+
+  // OVERRIDES
+  "overrides": [],
+
+  // RULES
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  },
+
+  // SETTINGS
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".mdx"]
+      }
+    }
+  }
+}
