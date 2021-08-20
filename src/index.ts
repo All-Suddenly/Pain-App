@@ -1,18 +1,21 @@
+import 'dotenv/config';
+
 import express, { response } from 'express';
-import { Document, MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-const databaseUrl = 'mongodb+srv://<username>:<password>@application.teqdc.mongodb.net?authSource=admin&replicaSet=atlas-4f4azn-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true';
-const client = new MongoClient(databaseUrl);
+const { MONGO_DB_NAME = '', MONGO_URL = "", PORT = 4000 } = process.env;
 
-const databaseName = 'application';
+const databaseUrl = MONGO_URL;
+const dbClient = new MongoClient(databaseUrl);
+
+const databaseName = MONGO_DB_NAME;
 const app = express();
 
-
 async function startServer() {
-  await client.connect()
+  await dbClient.connect();
   console.log('Connected successfully to the mongo database');
 
-  const db = client.db(databaseName);
+  const db = dbClient.db(databaseName);
   const collection = db.collection('users');
 
   app.get('/api/users', async (req, res) => {
@@ -33,35 +36,24 @@ async function startServer() {
     return response.json(newUser);
   });
 
+  if (process.env.NODE_ENV === 'production') {
+    // Serve static assets
+    app.use(express.static('client/build'));
+  
+    // Serve index.html for non routed paths
+    const path = require('path');
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    })
+  } else {
+    app.get('*', (req, res) => {
+      res.send("In development mode.");
+    })
+  }
 
-  app.get('*', async (req, res) => {
-    const { id = '' } = req.query;
-
-    let user: Document | undefined;
-
-    if (id) {
-      user = await collection.findOne({ _id: new ObjectId(String(id)) });
-    }
-
-    return res.type('html').status(200).end(`<!DOCTYPE html>
-
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <div><h1>Hello ${user?.name || "World"}!</h1></div>
-    </body>
-    </html>`)
-  })
-
-  app.listen(3000, () => {
-    console.log("The server is listenting");
+  app.listen(PORT, () => {
+    console.log(`The server is listenting on: http://localhost:${PORT}`);
   });
 }
-
 
 startServer().then().catch(error => console.log(error));
