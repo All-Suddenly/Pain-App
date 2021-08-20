@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "npm-s build:server build:client",
+    "heroku-postbuild": "npm run build:server && npm run build:client",
     "build:server": "tsc",
     "build:client": "npm run --prefix client build",
     "clean": "rimraf dist client/build",
