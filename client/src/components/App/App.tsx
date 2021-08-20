@@ -1,24 +1,26 @@
 export function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img
-          src="https://react-query.tanstack.com/_next/static/images/emblem-light-5d1cdce6c8bbb006ac6cefb8e1642877.svg"
-          className="App-logo"
-          alt=""
-        />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Learn React
-        </a>
+    <div style={{ padding: 20 }}>
+      <header>
+        <h1>Start of the Pain App!</h1>
       </header>
+      <main>
+        <h2>Welcome to the beginning of the pain app!</h2>
+
+        <p style={{ maxWidth: 400 }}>
+          The pain app will help you track your every day pains. Create a
+          tracker, and start adding your pain points today!.
+        </p>
+        <p>
+          Only <strong>$49.99</strong>/month!
+        </p>
+
+        <div>
+          <strong>
+            <span style={{ fontSize: '8rem' }}>Wow!</span>
+          </strong>
+        </div>
+      </main>
     </div>
   );
 }
