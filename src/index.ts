@@ -1,8 +1,9 @@
 import 'dotenv/config';
 
+import path from 'path';
+
 import express, { response } from 'express';
 import { MongoClient } from 'mongodb';
-import path from 'path';
 
 const { MONGO_DB_NAME = '', MONGO_URL = '', PORT = 4000 } = process.env;
 
