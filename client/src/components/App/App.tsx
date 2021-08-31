@@ -7,15 +7,20 @@ import {
   TrackerPage,
 } from '../../pages';
 
+import { NavigationBar } from './NavigationBar';
+
 export function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact component={LandingPage} />
-        <Route path="/dashboard" component={DashboardPage} />
-        <Route path="/tracker/:id" component={TrackerPage} />
-        <Route path="*" component={FourOhFour} />
-      </Switch>
+      <NavigationBar />
+      <main>
+        <Switch>
+          <Route path="/" exact component={LandingPage} />
+          <Route path="/dashboard" component={DashboardPage} />
+          <Route path="/tracker/:id" component={TrackerPage} />
+          <Route path="*" component={FourOhFour} />
+        </Switch>
+      </main>
     </Router>
   );
 }
