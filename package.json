@@ -15,7 +15,9 @@
     "dev:client": "npm run --prefix client start",
     "dev:server": "nodemon",
     "dev": "run-p --print-label dev:server dev:client",
-    "lint": "eslint --format codeframe . --ext .ts,.tsx",
+    "lint": "run-s lint:code lint:style",
+    "lint:code": "eslint --format codeframe . --ext .ts,.tsx",
+    "lint:style": "stylelint \"client/src/**/*.css\"",
     "postinstall": "npm install --prefix client ./client",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -54,10 +56,13 @@
     "lint-staged": "^11.1.2",
     "nodemon": "^2.0.12",
     "rimraf": "^3.0.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended": "^5.0.0",
     "ts-node": "^10.2.0",
     "typescript": "^4.3.5"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --format codeframe --cache --fix"
+    "*.{ts,tsx}": "eslint --format codeframe --cache --fix",
+    "*.css": "stylelint --cache --fix"
   }
 }
