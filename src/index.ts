@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import path from 'path';
 
+import cors from 'cors';
 import express, { response } from 'express';
 import { MongoClient } from 'mongodb';
 
@@ -19,6 +20,19 @@ async function startServer() {
 
   const db = dbClient.db(databaseName);
   const collection = db.collection('users');
+
+  app.use(cors());
+
+  // Delay server responses for a second
+  app.use((req, res, next) => {
+    setTimeout(() => {
+      return next();
+    }, 1000);
+  });
+
+  app.get('/api/trackers', async (req, res) => {
+    return res.json(['Yes', 'No']);
+  });
 
   app.get('/api/users', async (req, res) => {
     const users = await collection.find().toArray();

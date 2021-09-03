@@ -6,8 +6,7 @@ import {
   LandingPage,
   TrackerPage,
 } from '../../pages';
-
-import { NavigationBar } from './NavigationBar';
+import { NavigationBar } from '../NavigationBar';
 
 export function App() {
   return (
