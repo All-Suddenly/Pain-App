@@ -12,7 +12,7 @@
     "build": "run-s build:server build:client",
     "clean": "rimraf dist client/build",
     "dev:client": "npm run --prefix client start",
-    "dev:server": "nodemon src/index.ts",
+    "dev:server": "nodemon",
     "dev": "concurrently -n server,client -c green,blue \"npm run dev:server\" \"npm run dev:client\"",
     "heroku-postbuild": "npm run build:server && npm run build:client",
     "lint:code": "eslint --format codeframe . --ext .ts,.tsx",
