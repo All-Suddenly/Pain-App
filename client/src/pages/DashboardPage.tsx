@@ -8,7 +8,7 @@ export function DashboardPage() {
   useEffect(() => {
     setLoading(true);
 
-    fetch('http://localhost:4000/api/trackers')
+    fetch('http://localhost:4000/api/v1/trackers')
       .then((res) => res.json()) // Success
       .then((data) => setData(data)) // Converted JSON
       .catch((error) => setError(error)) // Error
