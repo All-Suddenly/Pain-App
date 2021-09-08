@@ -7,21 +7,21 @@
     "node": "^16.4.0"
   },
   "scripts": {
-    "build": "run-s build:server build:client",
-    "heroku-postbuild": "npm run build:server && npm run build:client",
-    "build:server": "tsc",
     "build:client": "npm run --prefix client build",
+    "build:server": "tsc",
+    "build": "run-s build:server build:client",
     "clean": "rimraf dist client/build",
     "dev:client": "npm run --prefix client start",
-    "dev:server": "nodemon --delay 100ms",
-    "dev": "run-p --print-label -r dev:server dev:client",
-    "lint": "run-s lint:code lint:style",
+    "dev:server": "nodemon src/index.ts",
+    "dev": "concurrently -n server,client -c green,blue \"npm run dev:server\" \"npm run dev:client\"",
+    "heroku-postbuild": "npm run build:server && npm run build:client",
     "lint:code": "eslint --format codeframe . --ext .ts,.tsx",
     "lint:style": "stylelint \"client/src/**/*.css\"",
+    "lint": "run-s lint:code lint:style",
     "postinstall": "npm install --prefix client ./client",
+    "prepare": "husky install",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -45,6 +45,7 @@
     "@types/express": "^4.17.13",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
+    "concurrently": "^6.2.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^6.0.0",

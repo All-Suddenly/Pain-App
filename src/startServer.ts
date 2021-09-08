@@ -8,7 +8,7 @@ import { MongoClient } from 'mongodb';
 
 import { APIRoutes } from './routes';
 
-const { MONGO_DB_NAME = '', MONGO_URL = '', PORT = 4000 } = process.env;
+const { MONGO_DB_NAME = '', MONGO_URL = '' } = process.env;
 
 const databaseUrl = MONGO_URL;
 const dbClient = new MongoClient(databaseUrl);
@@ -28,13 +28,6 @@ export async function startServer() {
   // Setup Server Middleware
   app.use(cors());
 
-  // Delay server responses for a second
-  app.use((req, res, next) => {
-    setTimeout(() => {
-      return next();
-    }, 1000);
-  });
-
   // Setup Routes
   app.use('/api/v1', APIRoutes);
 
@@ -53,9 +46,5 @@ export async function startServer() {
     });
   }
 
-  return new Promise<string>((resolve) => {
-    app.listen(PORT, () => {
-      resolve(String(PORT));
-    });
-  });
+  return app;
 }

@@ -2,17 +2,10 @@ import 'dotenv/config';
 
 import { startServer } from './startServer';
 
-process.once('SIGUSR2', function () {
-  process.kill(process.pid, 'SIGUSR2');
-});
-
-process.on('SIGINT', function () {
-  // this is only called on ctrl+c, not restart
-  process.kill(process.pid, 'SIGINT');
-});
+const { PORT = 4000 } = process.env;
 
 startServer()
-  .then((PORT) => {
-    console.log(`🚀 listening on http://localhost:${PORT} 🚀`);
+  .then((app) => {
+    app.listen(PORT);
   })
   .catch((error) => console.log(error));
