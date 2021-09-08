@@ -1,26 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+
+import { config } from '../config/config';
+
+function useGetUsers() {
+  return useQuery<void, Error, any[]>('users', () => {
+    return fetch(config.apiHost + '/users').then((res) => res.json());
+  });
+}
 
 export function DashboardPage() {
-  const [data, setData] = useState(undefined);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-
-    fetch('http://localhost:4000/api/v1/trackers')
-      .then((res) => res.json()) // Success
-      .then((data) => setData(data)) // Converted JSON
-      .catch((error) => setError(error)) // Error
-      .finally(() => setLoading(false)); // Finished
-  }, []);
+  const { isLoading, error, data } = useGetUsers();
 
   return (
     <div>
       <h1>Dashboard</h1>
-      {loading && <div>LOADING</div>}
+      {isLoading && <div>LOADING</div>}
       {Boolean(error) && <div className="text-red-500">{error?.message}</div>}
-      <div>{data}</div>
+      <div>{JSON.stringify(data)}</div>
     </div>
   );
 }
