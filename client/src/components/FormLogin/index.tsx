@@ -1,5 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
+import { LoginSchema } from '../../validations';
 import { Input } from '../Input';
 import { ErrorInput } from '../Input/ErrorInput';
 import { Label } from '../Label';
@@ -10,21 +11,9 @@ export function FormLogin() {
       <h1 className="my-2">Anywhere in your app!</h1>
       <Formik
         initialValues={{ email: '', password: '' }}
-        validate={(values) => {
-          const errors: { [key: string]: string } = {};
-          if (!values.email) {
-            errors.email = 'Required';
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = 'Invalid email address';
-          }
-          return errors;
-        }}
+        validationSchema={LoginSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log('sfk;jsdhfjksdfjk');
           setTimeout(() => {
-            console.log('sfk;jsdhfjksdfjk');
             alert(JSON.stringify(values, null, 2));
             setSubmitting(false);
           }, 400);
