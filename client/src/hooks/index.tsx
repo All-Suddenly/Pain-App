@@ -14,7 +14,7 @@ interface IFetchResults {
 }
 
 export function useLoginMutation(
-  options?: UseMutationOptions<IFetchResults, Error, string, unknown>,
+  options?: UseMutationOptions<IFetchResults, Error, string>,
 ) {
   return useMutation<IFetchResults, Error, string>((email) => {
     return fetch(config.apiHost + '/auth/login', {

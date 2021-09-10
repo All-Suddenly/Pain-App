@@ -5,7 +5,7 @@ import { getCollectionFromRequest } from './api';
 export const UsersRoutes = Router();
 
 // Route Helper Functions
-const getUserCollection = (req: Request) =>
+export const getUserCollection = (req: Request) =>
   getCollectionFromRequest('users', req);
 
 // Users

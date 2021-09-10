@@ -27,6 +27,8 @@ export async function startServer() {
 
   // Setup Server Middleware
   app.use(cors());
+  app.use(express.urlencoded());
+  app.use(express.json());
 
   // Setup Routes
   app.use('/api/v1', APIRoutes);
