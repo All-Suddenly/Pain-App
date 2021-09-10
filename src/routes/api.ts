@@ -1,6 +1,7 @@
 import { Request, Router } from 'express';
 import { Db } from 'mongodb';
 
+import { AuthRoutes } from './auth';
 import { UsersRoutes } from './users';
 
 const router = Router();
@@ -17,5 +18,6 @@ router.get('/trackers', async (req, res) => {
 });
 
 router.use('/users', UsersRoutes);
+router.use('/auth', AuthRoutes);
 
 export const APIRoutes = router;
