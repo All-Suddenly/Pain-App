@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 
-import { config } from '../config/config';
+import { config } from '../../config/config';
 
 function useGetUsers() {
   return useQuery<void, Error, any[]>('users', () => {
