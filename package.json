@@ -21,7 +21,9 @@
     "postinstall": "npm install --prefix client ./client",
     "prepare": "husky install",
     "start": "node dist/index.js",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --notify --watch",
+    "test:coverage": "jest --noStackTrace --coverage"
   },
   "repository": {
     "type": "git",
