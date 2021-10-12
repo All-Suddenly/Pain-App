@@ -6,21 +6,10 @@ export const UsersRoutes = Router();
 
 // Users
 UsersRoutes.get('/', async (req, res) => {
-  const collection = getUserCollection(req);
-  const users = await collection.find().toArray();
+  const collection = getUserCollection(getDatabaseFromRequest(req));
+  const users = await collection
+    .find({}, { sort: { email: 1 }, projection: { password: 0 } })
+    .toArray();
 
   return res.json(users);
-});
-
-UsersRoutes.post('/', async (req, res) => {
-  const { name, email, password } = req.query;
-  const collection = getUserCollection(req);
-
-  const newUser = await collection.insertOne({
-    name,
-    email,
-    password,
-  });
-
-  return res.json(newUser);
 });
