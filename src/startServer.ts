@@ -28,7 +28,11 @@ export async function startServer() {
   app.set('db', db);
 
   // Setup Server Middleware
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
   app.use(cors());
   app.use(cookieParser());
   app.use(express.urlencoded({ extended: true }));
