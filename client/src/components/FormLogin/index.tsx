@@ -17,11 +17,14 @@ export function FormLogin() {
         initialValues={{ email: '', password: '' }}
         validationSchema={LoginSchema}
         onSubmit={(values, { setSubmitting }) => {
-          const { email } = values;
+          const { email, password } = values;
 
-          mutate(email, {
-            onSettled: () => setSubmitting(false),
-          });
+          mutate(
+            { email, password },
+            {
+              onSettled: () => setSubmitting(false),
+            },
+          );
         }}
       >
         {({ isSubmitting }) => (

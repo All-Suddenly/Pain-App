@@ -13,15 +13,20 @@ interface IFetchResults {
   error?: any;
 }
 
+interface IParams {
+  email: string;
+  password: string;
+}
+
 export function useLoginMutation(
-  options?: UseMutationOptions<IFetchResults, Error, string>,
+  options?: UseMutationOptions<IFetchResults, Error, IParams>,
 ) {
-  return useMutation<IFetchResults, Error, string>((email) => {
+  return useMutation<IFetchResults, Error, IParams>(({ email, password }) => {
     return fetch(config.apiHost + '/auth/login', {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, password }),
       method: 'POST',
     }).then((response) => {
       if (response.status !== 200) {
