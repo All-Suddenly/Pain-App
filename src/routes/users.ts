@@ -1,12 +1,8 @@
-import { Request, Router } from 'express';
+import { Router } from 'express';
 
-import { getCollectionFromRequest } from './api';
+import { getDatabaseFromRequest, getUserCollection } from '../helpers/database';
 
 export const UsersRoutes = Router();
-
-// Route Helper Functions
-export const getUserCollection = (req: Request) =>
-  getCollectionFromRequest('users', req);
 
 // Users
 UsersRoutes.get('/', async (req, res) => {
