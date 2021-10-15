@@ -14,6 +14,10 @@ export async function login(email: string, password: string, database: Db) {
     throw new Error('No User Found');
   }
 
+  if (!userExists?.confirmedAt) {
+    throw new Error('Unconfirmed');
+  }
+
   const validPassword = await bcrypt.compare(password, userExists.password);
 
   if (!validPassword) {

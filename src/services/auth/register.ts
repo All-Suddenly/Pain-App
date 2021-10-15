@@ -13,6 +13,7 @@ export async function register(
   password: string,
   database: Db,
 ) {
+  // lowercase email
   const userCollection = getUserCollection(database);
 
   const userExists = await getUserByEmail(email, userCollection);
@@ -35,7 +36,7 @@ export async function register(
     throw new Error(`Invalid User input, ${error.errors}`);
   }
 
-  const user: IUser = {
+  const user: Partial<IUser> = {
     _id: '',
     name,
     email,
@@ -47,7 +48,7 @@ export async function register(
   user._id = newUserId;
   user.password = '';
 
-  const newtoken = await generateToken(user);
+  const newtoken = await generateToken(user as IUser);
 
   return {
     token: newtoken,

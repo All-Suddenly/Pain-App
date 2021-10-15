@@ -14,6 +14,16 @@ export const config = {
     name: MONGO_DB_NAME,
     url: MONGO_URL,
   },
+  email: {
+    apiKey: process.env.EMAIL_API_KEY || '',
+    sender: {
+      name: 'The PainApp',
+      email: 'davidclausen2051+thepainapp@gmail.com',
+    },
+  },
+  env: {
+    isProduction: process.env.NODE_ENV === 'production',
+  },
   jwt: {
     expiresIn: 15,
     secret: JWT_SECRET,
