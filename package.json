@@ -50,6 +50,7 @@
     "npm-run-all": "^4.1.5",
     "sib-api-v3-sdk": "^8.2.1",
     "sib-api-v3-typescript": "^2.2.2",
+    "uuid": "^8.3.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -63,6 +64,7 @@
     "@types/express-jwt": "^6.0.2",
     "@types/jest": "^26.0.24",
     "@types/jsonwebtoken": "^8.5.5",
+    "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "concurrently": "^6.2.1",
