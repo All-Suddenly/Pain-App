@@ -1,5 +1,6 @@
 import { Request, Router } from 'express';
 
+import { userSchema } from '../helpers/validation';
 import {
   confirmUserByToken,
   loginUserByEmail,
@@ -37,6 +38,20 @@ router.post(
   async (req: Request<any, any, IRegisterBody>, res, next) => {
     const database = req.app.get('db');
     const { email, name, password } = req.body;
+
+    try {
+      userSchema.validateSync(
+        {
+          email,
+          password,
+        },
+        {
+          abortEarly: false,
+        },
+      );
+    } catch (error) {
+      throw new Error(`Invalid User input, ${error.errors}`);
+    }
 
     registerUserByEmail(name, email.toLowerCase(), password, database)
       .then((user) => res.send({ ...user }))

@@ -24,20 +24,6 @@ export async function registerUserByEmail(
     throw new Error('Email already taken');
   }
 
-  try {
-    userSchema.validateSync(
-      {
-        email,
-        password,
-      },
-      {
-        abortEarly: false,
-      },
-    );
-  } catch (error) {
-    throw new Error(`Invalid User input, ${error.errors}`);
-  }
-
   // TODO: User Model Service
   const user: Partial<IUser> = {
     _id: '',
