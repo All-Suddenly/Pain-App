@@ -12,7 +12,7 @@ import { config } from '../../config';
 
 import { TEMPLATES_IDS } from './templateEnum';
 
-function createEmailClient() {
+export function createEmailClient() {
   const apiInstance = new TransactionalEmailsApi();
 
   apiInstance.setApiKey(
@@ -45,6 +45,7 @@ export async function sendEmail(
   response: IncomingMessage;
   body: CreateSmtpEmail;
 }> {
+  // eslint-disable-next-line no-constant-condition
   if (config.env.isProduction) {
     return client.sendTransacEmail(email);
   } else {
