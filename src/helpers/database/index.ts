@@ -8,5 +8,3 @@ export function getDatabaseFromRequest(req: Request) {
 export function getCollection(name: string, db: Db) {
   return db.collection(name);
 }
-
-export const getUserCollection = (db: Db) => getCollection('users', db);

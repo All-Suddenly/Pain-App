@@ -1,6 +1,10 @@
 import { Request, Router } from 'express';
 
-import { confirm, login, register } from '../services/auth';
+import {
+  confirmUserByToken,
+  loginUserByEmail,
+  registerUserByEmail,
+} from '../services/auth';
 
 const router = Router();
 
@@ -23,7 +27,7 @@ router.post('/login', async (req: Request<any, any, ILoginBody>, res, next) => {
   const database = req.app.get('db');
   const { email, password } = req.body;
 
-  login(email.toLowerCase(), password, database)
+  loginUserByEmail(email.toLowerCase(), password, database)
     .then((user) => res.send({ ...user }))
     .catch(next);
 });
@@ -34,11 +38,15 @@ router.post(
     const database = req.app.get('db');
     const { email, name, password } = req.body;
 
-    register(name, email.toLowerCase(), password, database)
+    registerUserByEmail(name, email.toLowerCase(), password, database)
       .then((user) => res.send({ ...user }))
       .catch(next);
   },
 );
+
+// LOCALHOST:3000/CONFIRM?token=123456789
+
+// LOCALHOST:4000/API/V1/AUTH/123456789
 
 router.post(
   '/confirm/:token',
@@ -46,7 +54,7 @@ router.post(
     const database = req.app.get('db');
     const { token } = req.params;
 
-    confirm(token, database)
+    confirmUserByToken(token, database)
       .then((user) => res.send({ ...user }))
       .catch(next);
   },

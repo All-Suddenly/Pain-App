@@ -1,12 +1,15 @@
 import bcrypt from 'bcrypt';
 import { Db } from 'mongodb';
 
-import { getUserCollection } from '../../helpers/database';
 import { generateToken } from '../../helpers/jwt/generateToken';
-import { getUserByEmail } from '../users';
+import { getUserByEmail, getUserCollectionFromDatabase } from '../users';
 
-export async function login(email: string, password: string, database: Db) {
-  const userCollection = getUserCollection(database);
+export async function loginUserByEmail(
+  email: string,
+  password: string,
+  database: Db,
+) {
+  const userCollection = getUserCollectionFromDatabase(database);
 
   const userExists = await getUserByEmail(email, userCollection);
 
