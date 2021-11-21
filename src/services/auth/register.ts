@@ -1,13 +1,24 @@
 import bcrypt from 'bcrypt';
-import { Db } from 'mongodb';
+import { Db, ObjectId } from 'mongodb';
 
 import { config } from '../../config';
-import { generateToken } from '../../helpers/jwt/generateToken';
-import { userSchema } from '../../helpers/validation';
+import { createHashFromToken, generateUUID } from '../../helpers/auth';
+import {
+  createEmailClient,
+  createTemplateEmail,
+  sendEmail,
+  TEMPLATES_IDS,
+} from '../email';
+import {
+  createToken,
+  getTokenCollectionFromDatabase,
+  saveToken,
+} from '../tokens';
 import {
   createUser,
   getUserByEmail,
   getUserCollectionFromDatabase,
+  saveUser,
 } from '../users';
 
 export async function registerUserByEmail(
@@ -17,6 +28,7 @@ export async function registerUserByEmail(
   database: Db,
 ) {
   const userCollection = getUserCollectionFromDatabase(database);
+  const tokenCollection = getTokenCollectionFromDatabase(database);
 
   const userExists = await getUserByEmail(email, userCollection);
 
@@ -24,25 +36,40 @@ export async function registerUserByEmail(
     throw new Error('Email already taken');
   }
 
-  // TODO: User Model Service
-  const user: Partial<IUser> = {
-    _id: '',
+  const user = await createUser({
     name,
     email,
     password: await bcrypt.hash(password, config.auth.saltRounds),
-  };
+  });
 
-  const newUserId = await createUser(user, userCollection);
+  const savedUser = await saveUser(user, userCollection);
 
-  // TODO SEND CONFIRMATION EMAIL
+  const token = generateUUID();
+  const hashedToken = createHashFromToken(token);
 
-  user._id = newUserId;
-  user.password = '';
+  const tokenDBObject = createToken({
+    type: TokenType.CONFIRM,
+    userId: new ObjectId(savedUser._id),
+    token: hashedToken,
+  });
 
-  const newtoken = await generateToken(user as IUser);
+  await saveToken(tokenDBObject, tokenCollection);
+
+  const client = createEmailClient();
+  const welcomeConfirmEmail = createTemplateEmail(
+    TEMPLATES_IDS.CONFIRMATION,
+    [{ email }],
+    {
+      NAME: name,
+      TOKEN: token,
+      URL: 'http://localhost:3000/account/confirm?token=',
+    },
+  );
+
+  const sentEmailResults = await sendEmail(welcomeConfirmEmail, client);
 
   return {
-    token: newtoken,
-    user,
+    status: 'Success',
+    statusCode: sentEmailResults?.response?.statusCode,
   };
 }
