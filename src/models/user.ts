@@ -3,21 +3,21 @@ import { createMeta } from '../helpers/models';
 export type CreateUserModelInput = CopyWithPartial<IUser, keyof IBaseMeta>;
 
 export function createUserModel({
-  name,
-  email,
-  password,
   confirmedAt,
+  email,
+  hashedPassword,
   lastActivity,
+  name,
   ...meta
 }: CreateUserModelInput): IUser {
   return {
     ...createMeta(),
     ...meta,
-    name,
-    email,
-    password,
     confirmedAt,
+    email,
+    hashedPassword,
     lastActivity,
+    name,
   };
 }
 

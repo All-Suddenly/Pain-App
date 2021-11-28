@@ -9,8 +9,8 @@ interface IBaseMeta {
 // User
 interface IUser extends IBaseMeta {
   email: string;
+  hashedPassword: string;
   name: string;
-  password: string;
 
   // User Meta
   confirmedAt?: Date | null;
@@ -24,7 +24,7 @@ const enum TokenType {
 }
 
 interface IToken extends IBaseMeta {
-  token: string;
+  hashedToken: string;
   type: TokenType;
   userId: import('mongodb').ObjectId;
 }

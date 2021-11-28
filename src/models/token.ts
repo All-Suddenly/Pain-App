@@ -4,14 +4,14 @@ export type CreateTokenModelInput = CopyWithPartial<IToken, keyof IBaseMeta>;
 
 export function createTokenModel({
   userId,
-  token,
+  hashedToken,
   type,
   ...meta
 }: CreateTokenModelInput): IToken {
   return {
     ...createMeta(),
     ...meta,
-    token,
+    hashedToken,
     userId,
     type,
   };

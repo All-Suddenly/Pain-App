@@ -24,8 +24,8 @@ export async function startServer() {
   console.log('Connected successfully to the mongo database');
 
   // Establish application contexts
-  const db = dbClient.db(databaseName);
-  app.set('db', db);
+  const database = dbClient.db(databaseName);
+  app.set('db', database);
 
   // Setup Server Middleware
   app.use(

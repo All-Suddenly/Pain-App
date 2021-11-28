@@ -2,7 +2,11 @@ import bcrypt from 'bcrypt';
 import { Db } from 'mongodb';
 
 import { generateToken } from '../../helpers/jwt/generateToken';
-import { getUserByEmail, getUserCollectionFromDatabase } from '../users';
+import {
+  getUserByEmail,
+  getUserCollectionFromDatabase,
+  saveUser,
+} from '../users';
 
 export async function loginUserByEmail(
   email: string,
@@ -17,21 +21,26 @@ export async function loginUserByEmail(
     throw new Error('No User Found');
   }
 
-  if (!userExists?.confirmedAt) {
-    throw new Error('Unconfirmed');
-  }
-
-  const validPassword = await bcrypt.compare(password, userExists.password);
+  const validPassword = await bcrypt.compare(
+    password,
+    userExists.hashedPassword,
+  );
 
   if (!validPassword) {
     throw new Error('Invalid email or password');
   }
 
+  if (!userExists?.confirmedAt) {
+    throw new Error('Unconfirmed');
+  }
+
   //TODO: Generate a persistent ID
 
-  const token = await generateToken(userExists);
+  userExists.lastActivity = new Date();
 
-  // TODO: update user login activity
+  await saveUser(userExists, userCollection, 'update');
+
+  const token = await generateToken(userExists);
 
   return {
     token,

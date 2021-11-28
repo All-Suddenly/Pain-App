@@ -1,9 +1,32 @@
-import { Collection, Db } from 'mongodb';
+import { Collection, Db, Document, Filter } from 'mongodb';
 
 import { createTokenModel, CreateTokenModelInput } from '../../models';
 
 export function getTokenCollectionFromDatabase(database: Db) {
   return database.collection('tokens');
+}
+
+export function createToken(tokenInput: CreateTokenModelInput) {
+  const { hashedToken, userId, type } = tokenInput;
+
+  return createTokenModel({
+    hashedToken,
+    userId,
+    type,
+  });
+}
+
+export async function getToken(
+  filter: Filter<Document>,
+  collection: Collection,
+) {
+  const token = await collection.findOne<IToken>(filter);
+
+  if (!token) {
+    return null;
+  }
+
+  return createTokenModel(token);
 }
 
 export function createTokenForUser(type: TokenType) {
@@ -12,22 +35,38 @@ export function createTokenForUser(type: TokenType) {
   return tokenType;
 }
 
-export function createToken(tokenInput: CreateTokenModelInput) {
-  const { token, userId, type } = tokenInput;
-
-  return createTokenModel({
-    token,
-    userId,
-    type,
-  });
+export async function insertToken(token: IToken, collection: Collection) {
+  return collection.insertOne(token);
 }
 
-export async function saveToken(token: IToken, collection: Collection) {
-  const operationResult = await collection.insertOne(token);
+export async function updateToken(
+  filter: Filter<Document>,
+  update: IToken,
+  collection: Collection,
+) {
+  return collection.updateOne(filter, { $set: update });
+}
 
-  token._id = operationResult.insertedId;
+export async function saveToken(
+  token: IToken,
+  collection: Collection,
+  operation: 'insert' | 'update' = 'update',
+) {
+  if (operation === 'insert') {
+    const operationResult = await insertToken(token, collection);
+    token._id = operationResult.insertedId;
+  } else {
+    await updateToken({ _id: token._id }, token, collection);
+  }
 
   return token;
+}
+
+export async function getTokenByHashedToken(
+  hashedToken: string,
+  collection: Collection,
+) {
+  return getToken({ hashedToken }, collection);
 }
 
 // createToken({

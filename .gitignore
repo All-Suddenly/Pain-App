@@ -1,4 +1,5 @@
-## Github Default Gitignore
+# OS Litter
+.DS_Store
 
 # Logs
 logs

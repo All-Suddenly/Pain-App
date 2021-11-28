@@ -39,21 +39,21 @@ export async function registerUserByEmail(
   const user = await createUser({
     name,
     email,
-    password: await bcrypt.hash(password, config.auth.saltRounds),
+    password,
   });
 
-  const savedUser = await saveUser(user, userCollection);
+  const savedUser = await saveUser(user, userCollection, 'insert');
 
   const token = generateUUID();
   const hashedToken = createHashFromToken(token);
 
   const tokenDBObject = createToken({
+    hashedToken: hashedToken,
     type: TokenType.CONFIRM,
     userId: new ObjectId(savedUser._id),
-    token: hashedToken,
   });
 
-  await saveToken(tokenDBObject, tokenCollection);
+  await saveToken(tokenDBObject, tokenCollection, 'insert');
 
   const client = createEmailClient();
   const welcomeConfirmEmail = createTemplateEmail(
