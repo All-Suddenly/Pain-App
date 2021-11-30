@@ -5,6 +5,7 @@ import {
   confirmUserByToken,
   loginUserByEmail,
   registerUserByEmail,
+  resendTokenByEmail,
 } from '../services/auth';
 
 const router = Router();
@@ -22,6 +23,10 @@ interface IRegisterBody {
 
 interface IConfirmParams {
   token: string;
+}
+
+interface IResendBody {
+  email: string;
 }
 
 router.post('/login', async (req: Request<any, any, ILoginBody>, res, next) => {
@@ -59,10 +64,6 @@ router.post(
   },
 );
 
-// LOCALHOST:3000/CONFIRM?token=123456789
-
-// LOCALHOST:4000/API/V1/AUTH/123456789
-
 router.post(
   '/confirm/:token',
   async (req: Request<IConfirmParams>, res, next) => {
@@ -70,6 +71,18 @@ router.post(
     const { token } = req.params;
 
     confirmUserByToken(token, database)
+      .then((user) => res.send({ ...user }))
+      .catch(next);
+  },
+);
+
+router.post(
+  '/resend',
+  async (req: Request<any, any, IResendBody>, res, next) => {
+    const database = req.app.get('db');
+    const { email } = req.body;
+
+    resendTokenByEmail(email.toLowerCase(), database)
       .then((user) => res.send({ ...user }))
       .catch(next);
   },
