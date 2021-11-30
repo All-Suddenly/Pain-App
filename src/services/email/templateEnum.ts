@@ -1,3 +1,4 @@
 export enum TEMPLATES_IDS {
   CONFIRMATION = 1,
+  RESEND_CONFIRMATION = 2,
 }
