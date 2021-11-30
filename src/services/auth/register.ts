@@ -1,14 +1,7 @@
-import bcrypt from 'bcrypt';
 import { Db, ObjectId } from 'mongodb';
 
-import { config } from '../../config';
-import { createHashFromToken, generateUUID } from '../../helpers/auth';
-import {
-  createEmailClient,
-  createTemplateEmail,
-  sendEmail,
-  TEMPLATES_IDS,
-} from '../email';
+import { generateUUID } from '../../helpers/auth';
+import { createTemplateEmail, sendEmail, TEMPLATES_IDS } from '../email';
 import {
   createToken,
   getTokenCollectionFromDatabase,
@@ -45,17 +38,14 @@ export async function registerUserByEmail(
   const savedUser = await saveUser(user, userCollection, 'insert');
 
   const token = generateUUID();
-  const hashedToken = createHashFromToken(token);
-
   const tokenDBObject = createToken({
-    hashedToken: hashedToken,
+    token,
     type: TokenType.CONFIRM,
     userId: new ObjectId(savedUser._id),
   });
 
   await saveToken(tokenDBObject, tokenCollection, 'insert');
 
-  const client = createEmailClient();
   const welcomeConfirmEmail = createTemplateEmail(
     TEMPLATES_IDS.CONFIRMATION,
     [{ email }],
@@ -66,7 +56,7 @@ export async function registerUserByEmail(
     },
   );
 
-  const sentEmailResults = await sendEmail(welcomeConfirmEmail, client);
+  const sentEmailResults = await sendEmail(welcomeConfirmEmail);
 
   return {
     status: 'Success',

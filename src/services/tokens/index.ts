@@ -1,13 +1,22 @@
-import { Collection, Db, Document, Filter } from 'mongodb';
+import { Collection, Db, Document, Filter, ObjectId } from 'mongodb';
 
-import { createTokenModel, CreateTokenModelInput } from '../../models';
+import { createHashFromToken } from '../../helpers/auth';
+import { createTokenModel } from '../../models';
+
+interface ICreateTokenInput {
+  token: string;
+  userId: ObjectId;
+  type: TokenType;
+}
 
 export function getTokenCollectionFromDatabase(database: Db) {
   return database.collection('tokens');
 }
 
-export function createToken(tokenInput: CreateTokenModelInput) {
-  const { hashedToken, userId, type } = tokenInput;
+export function createToken(tokenInput: ICreateTokenInput) {
+  const { token, userId, type } = tokenInput;
+
+  const hashedToken = createHashFromToken(token);
 
   return createTokenModel({
     hashedToken,
@@ -29,6 +38,15 @@ export async function getToken(
   return createTokenModel(token);
 }
 
+export async function getTokens(
+  filter: Filter<Document>,
+  collection: Collection,
+) {
+  const tokens = await collection.find<IToken>(filter).toArray();
+
+  return tokens.map(createTokenModel);
+}
+
 export function createTokenForUser(type: TokenType) {
   const tokenType = type.toString();
 
@@ -41,10 +59,18 @@ export async function insertToken(token: IToken, collection: Collection) {
 
 export async function updateToken(
   filter: Filter<Document>,
-  update: IToken,
+  update: Partial<IToken>,
   collection: Collection,
 ) {
   return collection.updateOne(filter, { $set: update });
+}
+
+export async function updateTokens(
+  filter: Filter<Document>,
+  update: Partial<IToken>,
+  collection: Collection,
+) {
+  return collection.updateMany(filter, { $set: update });
 }
 
 export async function saveToken(
