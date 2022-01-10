@@ -19,3 +19,7 @@ body {
 main {
   padding: 16px;
 }
+
+button:disabled {
+  opacity: 0.25;
+}

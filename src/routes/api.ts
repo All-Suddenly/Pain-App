@@ -1,15 +1,9 @@
-import { Request, Router } from 'express';
-import { Db } from 'mongodb';
+import { Router } from 'express';
 
+import { AuthRoutes } from './auth';
 import { UsersRoutes } from './users';
 
 const router = Router();
-
-// Route Helper Functions
-export function getCollectionFromRequest(name: string, req: Request) {
-  const db = req.app.get('db') as Db;
-  return db.collection(name);
-}
 
 // Trackers
 router.get('/trackers', async (req, res) => {
@@ -17,5 +11,6 @@ router.get('/trackers', async (req, res) => {
 });
 
 router.use('/users', UsersRoutes);
+router.use('/auth', AuthRoutes);
 
 export const APIRoutes = router;

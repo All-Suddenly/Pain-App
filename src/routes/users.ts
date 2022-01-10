@@ -1,30 +1,16 @@
-import { Request, Router } from 'express';
+import { Router } from 'express';
 
-import { getCollectionFromRequest } from './api';
+import { getDatabaseFromRequest } from '../helpers/database';
+import { getUserCollectionFromDatabase } from '../services/users';
 
 export const UsersRoutes = Router();
 
-// Route Helper Functions
-const getUserCollection = (req: Request) =>
-  getCollectionFromRequest('users', req);
-
 // Users
 UsersRoutes.get('/', async (req, res) => {
-  const collection = getUserCollection(req);
-  const users = await collection.find().toArray();
+  const collection = getUserCollectionFromDatabase(getDatabaseFromRequest(req));
+  const users = await collection
+    .find({}, { sort: { email: 1 }, projection: { password: 0 } })
+    .toArray();
 
   return res.json(users);
-});
-
-UsersRoutes.post('/', async (req, res) => {
-  const { name, email, password } = req.query;
-  const collection = getUserCollection(req);
-
-  const newUser = await collection.insertOne({
-    name,
-    email,
-    password,
-  });
-
-  return res.json(newUser);
 });

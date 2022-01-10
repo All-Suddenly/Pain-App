@@ -2,18 +2,20 @@ import 'dotenv/config';
 
 import path from 'path';
 
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import jwt from 'express-jwt';
+import helmet from 'helmet';
 import { MongoClient } from 'mongodb';
 
+import { config } from './config';
 import { APIRoutes } from './routes';
 
-const { MONGO_DB_NAME = '', MONGO_URL = '' } = process.env;
-
-const databaseUrl = MONGO_URL;
+const databaseUrl = config.db.url;
 const dbClient = new MongoClient(databaseUrl);
 
-const databaseName = MONGO_DB_NAME;
+const databaseName = config.db.name;
 const app = express();
 
 export async function startServer() {
@@ -22,11 +24,39 @@ export async function startServer() {
   console.log('Connected successfully to the mongo database');
 
   // Establish application contexts
-  const db = dbClient.db(databaseName);
-  app.set('db', db);
+  const database = dbClient.db(databaseName);
+  app.set('db', database);
 
   // Setup Server Middleware
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
   app.use(cors());
+  app.use(cookieParser());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  // Setting up auth
+  app.use(
+    jwt({
+      algorithms: ['HS256'],
+      credentialsRequired: false,
+      secret: config.jwt.secret,
+    }),
+  );
+
+  app.use(function AuthErrorCheck(
+    err: { name: string },
+    _req: unknown,
+    _res: unknown,
+    next: () => unknown,
+  ) {
+    if (err.name === 'UnauthorizedError') {
+      next();
+    }
+  });
 
   // Setup Routes
   app.use('/api/v1', APIRoutes);
